@@ -11,5 +11,5 @@ mr_anderson = {last_name: 'Mr. Anderson', age: 40}
 mr_smith_id = $users.insert_one(mr_smith)
 mr_anderson_id = $users.insert_one(mr_anderson)
 
-p $users.find(age: {'$gt' => 20}).to_a.each
+p $users.find(age: {'$gt' => 20}).to_a
 
