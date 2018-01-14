@@ -1,0 +1,19 @@
+# frozen_string_literal: true
+
+source "https://rubygems.org"
+
+git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
+
+# gem "rails"
+
+# Added at 2018-01-14 16:49:19 -0600 by larryjones:
+gem "mongo", "~> 2.4"
+
+# Added at 2018-01-14 16:49:58 -0600 by larryjones:
+gem "twitter", "~> 6.2"
+
+# Added at 2018-01-14 16:50:29 -0600 by larryjones:
+gem "bson", "~> 4.2"
+
+# Added at 2018-01-14 16:50:39 -0600 by larryjones:
+gem "sinatra", "~> 2.0"
