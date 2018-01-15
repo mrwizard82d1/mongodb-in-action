@@ -7,14 +7,14 @@ require 'config'
 
 class TweetArchiver
   def initialize(tag)
-    client = Mongo::Client.new(["#{DATABASE_HOST}:#{DATABASE_PORT}"], :database => "#{DATABASE_NAME}")
-    @tweets = client["#{COLLECTION_NAME}"]
+    mongo_client = Mongo::Client.new(["#{DATABASE_HOST}:#{DATABASE_PORT}"], :database => "#{DATABASE_NAME}")
+    @tweets = mongo_client["#{COLLECTION_NAME}"]
     @tweets.indexes.drop_all
     @tweets.indexes.create_many([{key: {tags: 1}}, {key: {id: -1}}])
     @tag = tag
     @tweets_found = 0
 
-    @client = Twitter::REST::Client.new do |config|
+    @twitter_client = Twitter::REST::Client.new do |config|
       config.consumer_key = CONSUMER_KEY
       config.consumer_secret = CONSUMER_SECRET
       config.access_token = TOKEN
@@ -22,8 +22,16 @@ class TweetArchiver
     end
   end
 
+  # Public service providing feedback
+  def update
+    puts "Starting Twitter search for '#{@tag}'...."
+    save_tweets_for(@tag)
+    puts "Saved #{@tweets_found} Tweets.\n\n"
+  end
+
+  private
   def save_tweets_for(term)
-    @client.search(term).each do |tweet|
+    @twitter_client.search(term).each do |tweet|
       @tweets_found += 1
       tweet_doc = tweet.to_h
       tweet_doc[:tags] = term
