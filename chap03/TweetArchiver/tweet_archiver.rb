@@ -7,10 +7,9 @@ require 'config'
 
 class TweetArchiver
   def initialize(tag)
-    mongo_client = Mongo::Client.new(["#{DATABASE_HOST}:#{DATABASE_PORT}"], :database => "#{DATABASE_NAME}")
-    @tweets = mongo_client["#{COLLECTION_NAME}"]
-    @tweets.indexes.drop_all
-    @tweets.indexes.create_many([{key: {tags: 1}}, {key: {id: -1}}])
+    connection = Mongo::Client.new("mongodb://#{DATABASE_HOST}:#{DATABASE_PORT}/#{DATABASE_NAME}")
+    @tweets = connection["#{COLLECTION_NAME}"]
+    @tweets.indexes.create_one({tags: 1, id: -1})
     @tag = tag
     @tweets_found = 0
 
